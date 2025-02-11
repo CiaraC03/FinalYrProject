@@ -18,24 +18,20 @@ pwm_compost = GPIO.PWM(COMPOST_PIN, 50)
 pwm_recycling.start(0)
 pwm_compost.start(0)
 
-# Track when the servo was last activated
+# to prevent servo continually polling 
 last_movement_time = 0  
-DELAY_BETWEEN_MOVEMENTS = 10  # 10 seconds
+delay_for_motor = 10  
 
-def move_servo(pwm):
-    """Moves the servo to the open position, waits, then returns to closed."""
+def open_bin(pwm):
     print("Opening bin") 
-    pwm.ChangeDutyCycle(7.5)  # Move to open position
-    time.sleep(1)
-
+    pwm.ChangeDutyCycle(7.5)  
     print("Holding open for 5 seconds...")
-    time.sleep(5)  # Hold open for 5 seconds
-
+    # I might add in functionlity here so that if the IR senor detected something dropping in the bin, it then closes the lid?
+    time.sleep(6) 
     print("Closing bin")  
-    pwm.ChangeDutyCycle(2.5)  # Move back to closed position
+    pwm.ChangeDutyCycle(2.5)  n
     time.sleep(1)
-
-    pwm.ChangeDutyCycle(0)  # Stop signal to prevent jitter
+    pwm.ChangeDutyCycle(0) 
 
 # Start the model process
 process = subprocess.Popen(
@@ -45,7 +41,7 @@ process = subprocess.Popen(
     text=True
 )
 
-print("Model running...")
+print("Project starting, detecting for Waste or Compost!")
 
 try:
     while True:
@@ -54,36 +50,37 @@ try:
         if not line:
             continue 
 
-        print(line.strip())  # Live output
+        print(line.strip())  # gives the live data of whats detected
 
         match = re.search(r'(\[.*\])', line)
         if match:
             try:
                 detections = json.loads(match.group(1))  
 
-                # Check the time since the last movement
+                # Checks time
                 current_time = time.time()
 
                 for obj in detections:
                     label = obj.get("label")
 
                     if label in ["Recycling", "Compost"]:
-                        if current_time - last_movement_time >= DELAY_BETWEEN_MOVEMENTS:
+                        if current_time - last_movement_time >= delay_for_motor:
                             if label == "Recycling":
-                                print("Recycling detected, moving servo.")
-                                move_servo(pwm_recycling)
+                                print("Recycling detected, opening bin!")
+                                open_bin(pwm_recycling)
                             elif label == "Compost":
-                                print("Compost detected, moving servo.")
-                                move_servo(pwm_compost)
+                                print("Compost detected, opening bin")
+                                open_bin(pwm_compost)
 
-                            # Update last movement time
+                            # Updates time
                             last_movement_time = current_time
                         else:
-                            print(f"Detected {label}, but waiting for cooldown period to end.")
+                            print(f"Detected {label}, but waiting on delay.")
 
             except json.JSONDecodeError:
-                print("Error decoding JSON")
+                print("Error with json")
 
+#if i want to exit out of the termonal command, press ctrl + c
 except KeyboardInterrupt:
     print("\nStopping script...")
     pwm_recycling.stop()
