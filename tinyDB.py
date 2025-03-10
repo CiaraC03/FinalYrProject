@@ -1,5 +1,6 @@
 from tinydb import TinyDB
 
+
 class ProjectBinDatabase:
     def __init__(self, db_path="/home/ciara/Documents/FinalYrPro/db.json"):
         

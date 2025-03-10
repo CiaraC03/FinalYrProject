@@ -24,7 +24,7 @@ sensor = dht11.DHT11(pin=DHT_PIN)
 pwm_recycling.start(0)
 pwm_compost.start(0)
 
-# to prevent servo continually polling 
+
 last_movement_time = 0  
 delay_for_motor = 10
 
