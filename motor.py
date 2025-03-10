@@ -4,6 +4,9 @@ import time
 import re
 import json
 import dht11
+from tinyDB import TinyDB
+
+db = TinyDB('/home/ciara/Documents/FinalYrPro/db.json')
 
 RECYCLING_PIN = 24
 COMPOST_PIN = 25
@@ -16,8 +19,6 @@ GPIO.setup(COMPOST_PIN, GPIO.OUT)
 # Set up PWM for both servos
 pwm_recycling = GPIO.PWM(RECYCLING_PIN, 50)
 pwm_compost = GPIO.PWM(COMPOST_PIN, 50)
-
-# Set up dht11 pin
 sensor = dht11.DHT11(pin=DHT_PIN)
 
 pwm_recycling.start(0)
@@ -33,29 +34,27 @@ def temp_humidity():
     temperature = result.temperature
     humidity = result.humidity
     print(f"Temperature: {temperature}°C, Humidity: {humidity}%")
-    if temperature >= 50 and temperature <=60:
-        print("Optimal temperature for compostion")
-    else:
-        print("Temperature needs to be between 50 and 60 degrees for optimal compostion")
-                
-    if humidity >= 50 and humidity <=60:
-        print("Optimal humidity for compostion")
-    else:
-        print("Humidity needs to be between 50 and 60 percent for optimal compostion")
+
+    db.insert({
+        "type": "DHT11 Sensor",
+        "temperature": temperature,
+        "humidity": humidity,
+        "status": "Optimal temperature and humidity" if (50 <= temperature <= 60 and 50 <= humidity <= 60) else "Temperature needs to be between 50 and 60 degrees while humidity needs to be between 50 and 60 percent for optimal compostion",
+        "timestamp": time.time()
+    })
 
 
 def open_bin(pwm):
     print("Opening bin") 
-    pwm.ChangeDutyCycle(7.5)  
+    pwm.ChangeDutyCycle(5.0)
     print("Holding open for 5 seconds...")
     # I might add in functionlity here so that if the IR senor detected something dropping in the bin, it then closes the lid?
     time.sleep(6) 
     print("Closing bin")  
-    pwm.ChangeDutyCycle(2.5)  
+    pwm.ChangeDutyCycle(7.5)  
     time.sleep(1)
     pwm.ChangeDutyCycle(0) 
 
-# Start the model process
 process = subprocess.Popen(
     ['edge-impulse-linux-runner'], 
     stdout=subprocess.PIPE, 
@@ -90,13 +89,26 @@ try:
                     label = obj.get("label")
 
                     if label in ["Recycling", "Compost"]:
+                        
                         if current_time - last_movement_time >= delay_for_motor:
                             if label == "Recycling":
                                 print("Recycling detected, opening bin!")
+                                db.insert({
+                                    "type": "Recycling", 
+                                    "action": "Opened bin",
+                                    "timestamp": time.time()
+                                })
                                 open_bin(pwm_recycling)
                             elif label == "Compost":
                                 print("Compost detected, opening bin")
+                                db.insert({
+                                    "type": "Waste", 
+                                    "action": "Opened bin",
+                                    "timestamp": time.time()
+                                })
                                 open_bin(pwm_compost)
+                                
+                              
 
                             # Updates time
                             last_movement_time = current_time
