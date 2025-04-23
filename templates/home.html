@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Smart Cycle</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styleHome.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to SmartCycle</h1>
+        <p>Computer vision helps us make better decisions</p>
+    </header>
+
+    <div class="qr-code">
+        <h3>Scan to visit my GitHub:</h3>
+        <img src="{{ url_for('static', filename='qrCode.png') }}" alt="GitHub QR Code" width="200">
+    </div>
+
+    <div class="buttons">
+        <p>Click these button to see more about the live data collected:</p>
+        <a href="{{ url_for('index') }}">
+            <button>Click to see Data</button>
+        </a>
+        <a href="{{ url_for('live') }}">
+            <button>Click to see Live data</button>
+        </a>
+    </div>
+   
+
+
+    <div class="quotes">
+        <div class="smallerquote">
+            "Artificial Intelligence is a tool not a threat" - Rodney Brooks
+        </div>
+        <p>Reduce, Reuse, Recycle, Repeat!</p>
+    </div>
+
+    <div class="resources">
+        <h3>More Resources</h3>
+        <ul>
+            <li><a href="https://www.eea.europa.eu/en/analysis/indicators/waste-recycling-in-europe" target="_blank">Recycling Facts</a></li>
+            <li><a href="https://mywaste.ie/" target="_blank">Recycling in Ireland</a></li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 SmartCycle. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
