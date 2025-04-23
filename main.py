@@ -25,20 +25,17 @@ print("Project starting, detecting for Waste or Compost")
 
 read_dht_time = time.time()
 
-
-
 try:
     while True:
         line = process.stdout.readline()
 
-        print(line.strip())  # gives the live data of whats detected
+        print(line.strip())  
 
         match = re.search(r'(\[.*\])', line)
         if match:
             try:
                 detections = json.loads(match.group(1))  
 
-                # Checks time
                 read_motor_time = time.time()
 
                 for obj in detections:
@@ -52,7 +49,7 @@ try:
                                 db.insert({
                                     "type": "Recycling", 
                                     "action": "Opened bin",
-                                    "timestamp": time.time()
+                                    "time": time.time()
                                 })
                                 open_bin(pwm_recycling)
                             elif label == "Compost":
@@ -60,21 +57,18 @@ try:
                                 db.insert({
                                     "type": "Compost", 
                                     "action": "Opened bin",
-                                    "timestamp": time.time()
+                                    "time": time.time()
                                 })
                                 open_bin(pwm_compost)
                                 
-                              
-
-                            # Updates time
                             last_movement_motor = read_motor_time
                         else:
                             print(f"Detected {label}, but waiting on delay.")
 
             except json.JSONDecodeError:
-                print("Error with json")
+                print("JSON Error")
                 
-            # Every min for the temp humidity sensor 
+            
             if time.time() - read_dht_time >= 60:
                 temp_humidity()
                 read_dht_time = time.time()

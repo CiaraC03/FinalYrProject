@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Cycle Data</title>
+    <meta http-equiv="refresh" content="5">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Smart Cycle</h1>
+
+
+    <a href="https://www.compostmagazine.com/moisture-in-compost/" class="compost_link" target="_blank">Optimal Compost Compostion</a>
+
+    
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Action</th>
+            <th>Time</th>
+            
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ item['type'] }}</td>
+            <td>{{ item['action'] }}</td>
+            <td>{{ item['time']  | datetimeformat}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

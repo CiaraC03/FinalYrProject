@@ -38,7 +38,7 @@ def temp_humidity():
         "temperature": temperature,
         "humidity": humidity,
         "action": f"Temperature: {temperature}°C, Humidity: {humidity}%",
-        "timestamp": time.time()
+        "time": time.time()
     })
 
 
@@ -53,7 +53,7 @@ def open_bin(pwm):
         db.insert({
             "type": "Detection",
             "action": "Bin is full",
-            "timestamp": time.time()
+            "time": time.time()
         })
         return
     time.sleep(0.1) 
