@@ -17,7 +17,6 @@ table {
     box-shadow: 10px 10px 5px rgb(0, 128, 128);
     background: white;
     border-radius: 8px;
-    overflow: hidden;
 }
 
 th, td {
@@ -30,8 +29,7 @@ th {
     background-color: #20B2AA;;
     color: white;
     text-transform: uppercase;
-    font-size: 14px;
-    letter-spacing: 1px;
+    font-size: 15px;
 }
 
 .compost_link {
@@ -40,10 +38,8 @@ th {
     right: 20px;
     background-color: #FFDAB9;
     color: #333;
-    padding: 8px 12px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 14px;
+    padding: 10px 10px;
+    font-size: 20px;
     font-family: 'Papyrus', fantasy;
 }
 
