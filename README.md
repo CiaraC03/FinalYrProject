@@ -4,12 +4,6 @@ A computer vision based project which detects Recycling or Compost!
 ## What does it do?
 Hosted on edge impulse, this smart waste system uses computer vision to detect compost or recycling and sorts them into their appropriate class. The bin features two servo motors which physically opens the bin while the addition of an infrared sensor notifies the user if the bin needs emptying. Using a temperature and humidity sensor will help keep the compost conditions optimal.
 
-## Table of Contents
-
-- [Installation](#installation)
-
-## Installation
-
 ### Prerequisites
 - Raspberry Pi 4
 - Camera
